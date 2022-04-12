@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find jetbot_pro)/launch/lidar.launch" />
+
+  <node name="laser_filter" pkg="jetbot_pro" type="laser_filter.py" output="screen" />
+
+</launch>

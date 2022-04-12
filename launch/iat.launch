@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="iat_cn"  pkg="jetbot_pro"  type="vad.py" output="screen" >
+    <param name="Mode" value="iat_cn"/>
+  </node>
+
+
+  
+</launch>

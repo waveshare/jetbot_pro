@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find jetbot_pro)/launch/capture.launch" />
+  <include file="$(find jetbot_pro)/launch/play.launch" />
+
+</launch>
