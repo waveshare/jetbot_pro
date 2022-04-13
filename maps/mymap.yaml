@@ -1,0 +1,6 @@
+image: /home/jetbot/catkin_ws/src/jetbot_pro/maps/mymap.pgm
+resolution: 0.050000
+origin: [-5.160411, -6.779375, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
