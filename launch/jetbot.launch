@@ -2,10 +2,11 @@
 <launch>
   <param name="use_sim_time" value="false"/>
 
-  <node name="jetbot" pkg="jetbot_pro" type="jetbot" output="screen" respawn="true">
+  <node pkg="jetbot_pro" type="jetbot" name="jetbot" output="screen" respawn="true">
     <param name="port_name" value="/dev/ttyACM0"/>
     <param name="linear_correction" value="1.0"/>
     <param name="angular_correction" value="1.0"/>
+    <remap from="/odom" to="/odom_raw"/>
     <param name="publish_odom_transform" value="false"/>
   </node>
   
@@ -19,9 +20,12 @@
     <param name="vo_used" value="false"/>
     <param name="debug" value="false"/>
     <param name="self_diagnose" value="false"/>
+    <remap from="odom" to="/odom_raw"/>
     <remap from="/imu_data" to="/imu"/>
 		<remap from="/robot_pose_ekf/odom_combined" to="/odom_combined"/>
   </node>
-
+  
+  <node pkg="jetbot_pro" type="odom_ekf.py" name="odom_ekf_node" output="screen"/>
+  
 	<node pkg="tf" type="static_transform_publisher" name="base_footprint_to_imu" args="0 0 0.07 0 0 0 base_footprint base_imu_link 20"/> 
 </launch>

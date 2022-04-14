@@ -249,7 +249,7 @@ void serial_task()
           //first, we'll publish the transform over tf
           odom_trans.header.stamp = now_time;
           odom_trans.header.frame_id = "odom";
-          odom_trans.child_frame_id = "base_link";
+          odom_trans.child_frame_id = "base_footprint";
 
           odom_trans.transform.translation.x = odom_list[0];
           odom_trans.transform.translation.y = odom_list[1];
@@ -272,7 +272,7 @@ void serial_task()
           odom_msgs.pose.pose.orientation = odom_quat;
 
           //set the velocity
-          odom_msgs.child_frame_id = "base_link";
+          odom_msgs.child_frame_id = "base_footprint";
           odom_msgs.twist.twist.linear.x = odom_list[3]/((now_time-last_time).toSec());
           odom_msgs.twist.twist.linear.y = odom_list[4]/((now_time-last_time).toSec());
           odom_msgs.twist.twist.angular.z = odom_list[5]/((now_time-last_time).toSec());
