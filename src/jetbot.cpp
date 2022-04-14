@@ -54,34 +54,34 @@ uint8_t checksum(uint8_t* buf, size_t len)
 /*PID parameter sending function*/
 void SetPID(int p,int i, int d)
 {
-	static uint8_t tmp[11];
-	tmp[0] = head1;
-	tmp[1] = head2;
-	tmp[2] = 0x0b;
-	tmp[3] = sendType_pid;
-	tmp[4] = (p>>8)&0xff;
-	tmp[5] = p&0xff;
-	tmp[6] = (i>>8)&0xff;
-	tmp[7] = i&0xff;
-	tmp[8] = (d>>8)&0xff;
-	tmp[9] = d&0xff;
-	tmp[10] = checksum(tmp,10);
-	write(sp,buffer(tmp,11));
+  static uint8_t tmp[11];
+  tmp[0] = head1;
+  tmp[1] = head2;
+  tmp[2] = 0x0b;
+  tmp[3] = sendType_pid;
+  tmp[4] = (p>>8)&0xff;
+  tmp[5] = p&0xff;
+  tmp[6] = (i>>8)&0xff;
+  tmp[7] = i&0xff;
+  tmp[8] = (d>>8)&0xff;
+  tmp[9] = d&0xff;
+  tmp[10] = checksum(tmp,10);
+  write(sp,buffer(tmp,11));
 }
 
 /*robot parameter sending function*/
 void SetParams(double linear_correction,double angular_correction) {
-	static uint8_t tmp[9];
-	tmp[0]  = head1;
-	tmp[1]  = head2;
-	tmp[2]  = 0x09;
-	tmp[3]  = sendType_params;
-	tmp[4]  = (int16_t)((int16_t)(linear_correction*1000)>>8)&0xff;
-	tmp[5]  = (int16_t)(linear_correction*1000)&0xff;
-	tmp[6]  = (int16_t)((int16_t)(angular_correction*1000)>>8)&0xff;
-	tmp[7]  = (int16_t)(angular_correction*1000)&0xff;
-	tmp[8]  = checksum(tmp,8);
-	write(sp,buffer(tmp,9));
+  static uint8_t tmp[9];
+  tmp[0]  = head1;
+  tmp[1]  = head2;
+  tmp[2]  = 0x09;
+  tmp[3]  = sendType_params;
+  tmp[4]  = (int16_t)((int16_t)(linear_correction*1000)>>8)&0xff;
+  tmp[5]  = (int16_t)(linear_correction*1000)&0xff;
+  tmp[6]  = (int16_t)((int16_t)(angular_correction*1000)>>8)&0xff;
+  tmp[7]  = (int16_t)(angular_correction*1000)&0xff;
+  tmp[8]  = checksum(tmp,8);
+  write(sp,buffer(tmp,9));
 }
 
 /*robot speed transmission function*/
@@ -114,10 +114,10 @@ void cmd_callback(const geometry_msgs::Twist& msg)
 /*pid dynamic_reconfigure callback function*/
 void pidConfig_callback(jetbot_pro::pidConfig &config)
 {
-	kp = config.kp;
-	ki = config.ki;
-	kd = config.kd;
-	SetPID(kp,ki,kd);
+  kp = config.kp;
+  ki = config.ki;
+  kd = config.kd;
+  SetPID(kp,ki,kd);
 }
 
 //serial port receiving task
@@ -234,9 +234,9 @@ void serial_task()
           imu_msgs.linear_acceleration.z = imu_list[5];
           imu_msgs.orientation = tf::createQuaternionMsgFromRollPitchYaw(0,0,(imu_list[8]/180*3.1415926));
           imu_msgs.orientation_covariance = {1e6, 0, 0, 0, 1e6, 0, 0, 0, 0.05};
-					imu_msgs.angular_velocity_covariance = {1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e6};
-					imu_msgs.linear_acceleration_covariance = {1e-2, 0, 0, 0, 0, 0, 0, 0, 0};
-					imu_pub.publish(imu_msgs);
+          imu_msgs.angular_velocity_covariance = {1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e6};
+          imu_msgs.linear_acceleration_covariance = {1e-2, 0, 0, 0, 0, 0, 0, 0, 0};
+          imu_pub.publish(imu_msgs);
       
           odom_list[0]=((double)((int16_t)(data[22]*256+data[23]))/1000);
           odom_list[1]=((double)((int16_t)(data[24]*256+data[25]))/1000);
@@ -259,7 +259,7 @@ void serial_task()
           odom_trans.transform.rotation = odom_quat;
 
           //send the transform
-					if(publish_odom_transform)odom_broadcaster.sendTransform(odom_trans);
+          if(publish_odom_transform)odom_broadcaster.sendTransform(odom_trans);
 
           //next, we'll publish the odometry message over ROS
           odom_msgs.header.stamp = now_time;
@@ -276,18 +276,18 @@ void serial_task()
           odom_msgs.twist.twist.linear.x = odom_list[3]/((now_time-last_time).toSec());
           odom_msgs.twist.twist.linear.y = odom_list[4]/((now_time-last_time).toSec());
           odom_msgs.twist.twist.angular.z = odom_list[5]/((now_time-last_time).toSec());
-					odom_msgs.twist.covariance = { 1e-9, 0, 0, 0, 0, 0, 
-																         0, 1e-3, 1e-9, 0, 0, 0, 
-																         0, 0, 1e6, 0, 0, 0,
-																         0, 0, 0, 1e6, 0, 0, 
-																         0, 0, 0, 0, 1e6, 0, 
-																         0, 0, 0, 0, 0, 0.1 };
-					odom_msgs.pose.covariance = { 1e-9, 0, 0, 0, 0, 0, 
-																        0, 1e-3, 1e-9, 0, 0, 0, 
-																        0, 0, 1e6, 0, 0, 0,
-																        0, 0, 0, 1e6, 0, 0, 
-																        0, 0, 0, 0, 1e6, 0, 
-																        0, 0, 0, 0, 0, 1e3 };
+          odom_msgs.twist.covariance = { 1e-9, 0, 0, 0, 0, 0, 
+                                         0, 1e-3, 1e-9, 0, 0, 0, 
+                                         0, 0, 1e6, 0, 0, 0,
+                                         0, 0, 0, 1e6, 0, 0, 
+                                         0, 0, 0, 0, 1e6, 0, 
+                                         0, 0, 0, 0, 0, 0.1 };
+          odom_msgs.pose.covariance = { 1e-9, 0, 0, 0, 0, 0, 
+                                         0, 1e-3, 1e-9, 0, 0, 0, 
+                                         0, 0, 1e6, 0, 0, 0,
+                                         0, 0, 0, 1e6, 0, 0, 
+                                         0, 0, 0, 0, 1e6, 0, 
+                                         0, 0, 0, 0, 0, 1e3 };
           //publish the odom message
           odom_pub.publish(odom_msgs);
           
@@ -344,8 +344,8 @@ int main(int argc, char* argv[])
   f = boost::bind(&pidConfig_callback, _1);
   server.setCallback(f);
 
-	ros::Duration(0.02).sleep();
-	SetParams(linear_correction,angular_correction);
+  ros::Duration(0.02).sleep();
+  SetParams(linear_correction,angular_correction);
 
   //Create serial port receiving task
   thread serial_thread(boost::bind(serial_task));
