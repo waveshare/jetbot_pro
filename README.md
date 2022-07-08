@@ -1,7 +1,7 @@
 # jetbot_pro
 
-A ROS package of the WaveShare JetBot ROS AI Kit. An educational AI robot based on NVIDIA Jetson Nano.
 ![image](https://www.waveshare.net/photo/development-board/JetBot-ROS-AI-Kit/JetBot-ROS-AI-Kit-details-1.jpg)
+A ROS package of the WaveShare JetBot ROS AI Kit. An educational AI robot based on NVIDIA Jetson Nano.
 
 ## Website
 
